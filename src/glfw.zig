@@ -210,14 +210,10 @@ pub const Modifier = enum(ModifierType) {
 
 pub const MouseType = c_int;
 pub const Mouse = enum(MouseType) {
-    Button1 = 0,
-    Button2 = 1,
-    Button3 = 2,
     Button4 = 3,
     Button5 = 4,
     Button6 = 5,
     Button7 = 6,
-    Button8 = 7,
     ButtonLast = 7,
     ButtonLeft = 0,
     ButtonRight = 1,
@@ -295,19 +291,17 @@ pub const GLFWError = error{
 };
 
 pub const ErrorCodeType = c_int;
-pub const ErrorCode = enum(ErrorCodeType) {
-    NotInitialized = 0x00010001,
-    NoCurrentContext = 0x00010002,
-    InvalidEnum = 0x00010003,
-    InvalidValue = 0x00010004,
-    OutOfMemory = 0x00010005,
-    APIUnavailable = 0x00010006,
-    VersionUnavailable = 0x00010007,
-    PlatformError = 0x00010008,
-    FormatUnavailable = 0x00010009,
-    NoWindowContext = 0x0001000A,
-    NoError = 0,
-};
+pub const NotInitialized: ErrorCodeType = 0x00010001;
+pub const NoCurrentContext: ErrorCodeType = 0x00010002;
+pub const InvalidEnum: ErrorCodeType = 0x00010003;
+pub const InvalidValue: ErrorCodeType = 0x00010004;
+pub const OutOfMemory: ErrorCodeType = 0x00010005;
+pub const APIUnavailable: ErrorCodeType = 0x00010006;
+pub const VersionUnavailable: ErrorCodeType = 0x00010007;
+pub const PlatformError: ErrorCodeType = 0x00010008;
+pub const FormatUnavailable: ErrorCodeType = 0x00010009;
+pub const NoWindowContext: ErrorCodeType = 0x0001000A;
+pub const NoError: ErrorCodeType = 0;
 
 pub const WindowHintType = c_int;
 pub const WindowHint = enum(WindowHintType) {
