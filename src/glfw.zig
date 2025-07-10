@@ -290,17 +290,20 @@ pub const GLFWError = error{
 };
 
 pub const ErrorCodeType = c_int;
-pub const NotInitialized: ErrorCodeType = 0x00010001;
-pub const NoCurrentContext: ErrorCodeType = 0x00010002;
-pub const InvalidEnum: ErrorCodeType = 0x00010003;
-pub const InvalidValue: ErrorCodeType = 0x00010004;
-pub const OutOfMemory: ErrorCodeType = 0x00010005;
-pub const APIUnavailable: ErrorCodeType = 0x00010006;
-pub const VersionUnavailable: ErrorCodeType = 0x00010007;
-pub const PlatformError: ErrorCodeType = 0x00010008;
-pub const FormatUnavailable: ErrorCodeType = 0x00010009;
-pub const NoWindowContext: ErrorCodeType = 0x0001000A;
-pub const NoError: ErrorCodeType = 0;
+
+pub const ErrorCode = enum(ErrorCodeType) {
+    NotInitialized = 0x00010001,
+    NoCurrentContext = 0x00010002,
+    InvalidEnum = 0x00010003,
+    InvalidValue = 0x00010004,
+    OutOfMemory = 0x00010005,
+    APIUnavailable = 0x00010006,
+    VersionUnavailable = 0x00010007,
+    PlatformError = 0x00010008,
+    FormatUnavailable = 0x00010009,
+    NoWindowContext = 0x0001000A,
+    NoError = 0,
+};
 
 pub const WindowHintType = c_int;
 pub const WindowHint = enum(WindowHintType) {
@@ -582,17 +585,17 @@ extern fn glfwGetError(description: ?[*:0]const u8) c_int;
 fn errorCheck() !void {
     const code: c_int = glfwGetError(null);
     const err = switch (code) {
-        NotInitialized => GLFWError.NotInitialized,
-        NoCurrentContext => GLFWError.NoCurrentContext,
-        InvalidEnum => GLFWError.InvalidEnum,
-        InvalidValue => GLFWError.InvalidValue,
-        OutOfMemory => GLFWError.OutOfMemory,
-        APIUnavailable => GLFWError.APIUnavailable,
-        VersionUnavailable => GLFWError.VersionUnavailable,
-        PlatformError => GLFWError.PlatformError,
-        FormatUnavailable => GLFWError.FormatUnavailable,
-        NoWindowContext => GLFWError.NoWindowContext,
-        NoError => GLFWError.NoError,
+        @intFromEnum(ErrorCode.NotInitialized) => GLFWError.NotInitialized,
+        @intFromEnum(ErrorCode.NoCurrentContext) => GLFWError.NoCurrentContext,
+        @intFromEnum(ErrorCode.InvalidEnum) => GLFWError.InvalidEnum,
+        @intFromEnum(ErrorCode.InvalidValue) => GLFWError.InvalidValue,
+        @intFromEnum(ErrorCode.OutOfMemory) => GLFWError.OutOfMemory,
+        @intFromEnum(ErrorCode.APIUnavailable) => GLFWError.APIUnavailable,
+        @intFromEnum(ErrorCode.VersionUnavailable) => GLFWError.VersionUnavailable,
+        @intFromEnum(ErrorCode.PlatformError) => GLFWError.PlatformError,
+        @intFromEnum(ErrorCode.FormatUnavailable) => GLFWError.FormatUnavailable,
+        @intFromEnum(ErrorCode.NoWindowContext) => GLFWError.NoWindowContext,
+        @intFromEnum(ErrorCode.NoError) => GLFWError.NoError,
         else => GLFWError.NoError,
     };
     return err;
