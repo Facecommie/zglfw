@@ -1049,14 +1049,14 @@ pub fn getKeyScancode(key: Key) c_int {
 
 extern fn glfwGetKey(window: ?*Window, key: c_int) c_int;
 pub fn getKey(window: ?*Window, key: Key) KeyType {
-    const res = glfwGetKey(window, (key));
+    const res = glfwGetKey(window, @intFromEnum(key));
     errorCheck2();
     return res;
 }
 
 extern fn glfwGetMouseButton(window: ?*Window, button: c_int) c_int;
 pub fn getMouseButton(window: ?*Window, button: Mouse) KeyType {
-    const res = glfwGetMouseButton(window, (button));
+    const res = glfwGetMouseButton(window, @intFromEnum(button));
     errorCheck2();
     return res;
 }
