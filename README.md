@@ -8,7 +8,7 @@ While Zig is PERFECTLY capable of simply `@cImport`ing glfw3.h and using it in y
 
 zGLFW is NOT 100% tested. I am happy to fix any errors that may arise, and I will accept contributions! Errors that arise from GLFW will be printed to `stderr`.
 
-# ADD THIS TO YOUR BUILD.ZIG
+# Add this to your BUILD.ZIG
 
 ```zig
     const glfw_mod = b.addModule("root", .{
