@@ -8,38 +8,19 @@ While Zig is PERFECTLY capable of simply `@cImport`ing glfw3.h and using it in y
 
 zGLFW is NOT 100% tested. I am happy to fix any errors that may arise, and I will accept contributions! Errors that arise from GLFW will be printed to `stderr`.
 
-# Examples
+# ADD THIS TO YOUR BUILD.ZIG
 
 ```zig
-const std = @import("std");
-const glfw = @import("glfw");
-
-pub fn main() !void {
-    var major: i32 = 0;
-    var minor: i32 = 0;
-    var rev: i32 = 0;
-
-    glfw.getVersion(&major, &minor, &rev);
-    std.debug.print("GLFW {}.{}.{}\n", .{ major, minor, rev });
-
-    //Example of something that fails with GLFW_NOT_INITIALIZED - but will continue with execution
-    //var monitor: ?*glfw.Monitor = glfw.getPrimaryMonitor();
-
-    try glfw.init();
-    defer glfw.terminate();
-    std.debug.print("GLFW Init Succeeded.\n", .{});
-
-    var window: *glfw.Window = try glfw.createWindow(800, 640, "Hello World", null, null);
-    defer glfw.destroyWindow(window);
-
-    while (!glfw.windowShouldClose(window)) {
-        if (glfw.getKey(window, glfw.KeyEscape) == glfw.Press) {
-            glfw.setWindowShouldClose(window, true);
-        }
-
-        glfw.pollEvents();
-    }
-}
+    const glfw_mod = b.addModule("root", .{
+        .root_source_file = b.path("vendor/zglfw/src/glfw.zig"),
+        .target = target,
+        .optimize = optimize,
+        .link_libc = true,
+    });
+    exe.addLibraryPath(b.path("vendor/zglfw/libs/glfw"));
+    exe.linkSystemLibrary("glfw3");
+    exe.linkLibC();
+    exe.root_module.addImport("zglfw", glfw_mod);
 ```
 
 # Documentation
