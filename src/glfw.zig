@@ -1047,18 +1047,18 @@ pub fn getKeyScancode(key: Key) c_int {
     return res;
 }
 
-extern fn glfwGetKey(window: ?*Window, key: c_int) Action;
-pub fn getKey(window: ?*Window, key: Key) KeyType {
+extern fn glfwGetKey(window: ?*Window, key: c_int) c_int;
+pub fn getKey(window: ?*Window, key: Key) Action {
     const res = glfwGetKey(window, @intFromEnum(key));
     errorCheck2();
     return @enumFromInt(res);
 }
 
 extern fn glfwGetMouseButton(window: ?*Window, button: c_int) c_int;
-pub fn getMouseButton(window: ?*Window, button: Mouse) KeyType {
+pub fn getMouseButton(window: ?*Window, button: Mouse) Action {
     const res = glfwGetMouseButton(window, @intFromEnum(button));
     errorCheck2();
-    return res;
+    return @enumFromInt(res);
 }
 
 extern fn glfwGetCursorPos(window: ?*Window, xpos: *f64, ypos: *f64) void;
