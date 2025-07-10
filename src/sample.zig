@@ -1,5 +1,5 @@
 const std = @import("std");
-const glfw = @import("glfw");
+const glfw = @import("glfw.zig");
 
 pub fn main() !void {
     var major: i32 = 0;
@@ -20,7 +20,7 @@ pub fn main() !void {
     defer glfw.destroyWindow(window);
 
     while (!glfw.windowShouldClose(window)) {
-        if (glfw.getKey(window, glfw.KeyEscape) == glfw.Press) {
+        if (glfw.getKey(window, glfw.Key.Escape) == glfw.Press) {
             glfw.setWindowShouldClose(window, true);
         }
 

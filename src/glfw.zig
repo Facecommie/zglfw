@@ -50,318 +50,364 @@ const builtin = @import("builtin");
 pub const VersionMajor = 3;
 pub const VersionMinor = 3;
 pub const VersionRevision = 2;
+pub const DontCare: c_int = -1;
 
-pub const KeyState = c_int;
+pub const ActionType = c_int;
+pub const Action = enum(ActionType) {
+    Release = 0,
+    Press = 1,
+    Repeat = 2,
+};
 
-pub const Release: KeyState = 0;
-pub const Press: KeyState = 1;
-pub const Repeat: KeyState = 2;
+pub const JoystickHatType = c_int;
+pub const JoystickHat = enum(JoystickHatType) {
+    Centered = 0,
+    Up = 1,
+    Right = 2,
+    Down = 4,
+    Left = 8,
+    Rightup = (2 | 1),
+    Rightdown = (2 | 4),
+    Leftup = (8 | 1),
+    Leftdown = (8 | 4),
+};
 
-pub const JoystickHat = c_int;
-pub const Centered: KeyState = 0;
-pub const Up: KeyState = 1;
-pub const Right: KeyState = 2;
-pub const Down: KeyState = 4;
-pub const Left: KeyState = 8;
-pub const Rightup: KeyState = (2 | 1);
-pub const Rightdown: KeyState = (2 | 4);
-pub const Leftup: KeyState = (8 | 1);
-pub const Leftdown: KeyState = (8 | 4);
+pub const KeyType = c_int;
+pub const Key = enum(KeyType) {
+    Unknown = -1,
+    Space = 32,
+    Apostrophe = 39,
+    Comma = 44,
+    Minus = 45,
+    Period = 46,
+    Slash = 47,
+    Num0 = 48,
+    Num1 = 49,
+    Num2 = 50,
+    Num3 = 51,
+    Num4 = 52,
+    Num5 = 53,
+    Num6 = 54,
+    Num7 = 55,
+    Num8 = 56,
+    Num9 = 57,
+    Semicolon = 59,
+    Equal = 61,
+    A = 65,
+    B = 66,
+    C = 67,
+    D = 68,
+    E = 69,
+    F = 70,
+    G = 71,
+    H = 72,
+    I = 73,
+    J = 74,
+    K = 75,
+    L = 76,
+    M = 77,
+    N = 78,
+    O = 79,
+    P = 80,
+    Q = 81,
+    R = 82,
+    S = 83,
+    T = 84,
+    U = 85,
+    V = 86,
+    W = 87,
+    X = 88,
+    Y = 89,
+    Z = 90,
+    LeftBracket = 91,
+    Backslash = 92,
+    RightBracket = 93,
+    GraveAccent = 96,
+    World1 = 161,
+    World2 = 162,
+    Escape = 256,
+    Enter = 257,
+    Tab = 258,
+    Backspace = 259,
+    Insert = 260,
+    Delete = 261,
+    Right = 262,
+    Left = 263,
+    Down = 264,
+    Up = 265,
+    PageUp = 266,
+    PageDown = 267,
+    Home = 268,
+    End = 269,
+    CapsLock = 280,
+    ScrollLock = 281,
+    NumLock = 282,
+    PrintScreen = 283,
+    Pause = 284,
+    F1 = 290,
+    F2 = 291,
+    F3 = 292,
+    F4 = 293,
+    F5 = 294,
+    F6 = 295,
+    F7 = 296,
+    F8 = 297,
+    F9 = 298,
+    F10 = 299,
+    F11 = 300,
+    F12 = 301,
+    F13 = 302,
+    F14 = 303,
+    F15 = 304,
+    F16 = 305,
+    F17 = 306,
+    F18 = 307,
+    F19 = 308,
+    F20 = 309,
+    F21 = 310,
+    F22 = 311,
+    F23 = 312,
+    F24 = 313,
+    F25 = 314,
+    Kp0 = 320,
+    Kp1 = 321,
+    Kp2 = 322,
+    Kp3 = 323,
+    Kp4 = 324,
+    Kp5 = 325,
+    Kp6 = 326,
+    Kp7 = 327,
+    Kp8 = 328,
+    Kp9 = 329,
+    KpDecimal = 330,
+    KpDivide = 331,
+    KpMultiply = 332,
+    KpSubtract = 333,
+    KpAdd = 334,
+    KpEnter = 335,
+    KpEqual = 336,
+    LeftShift = 340,
+    LeftControl = 341,
+    LeftAlt = 342,
+    LeftSuper = 343,
+    RightShift = 344,
+    RightControl = 345,
+    RightAlt = 346,
+    RightSuper = 347,
+    Menu = 348,
+    Last = 348,
+};
 
-pub const Key = c_int;
-pub const KeyUnknown: Key = -1;
-pub const KeySpace: Key = 32;
-pub const KeyApostrophe: Key = 39;
-pub const KeyComma: Key = 44;
-pub const KeyMinus: Key = 45;
-pub const KeyPeriod: Key = 46;
-pub const KeySlash: Key = 47;
-pub const KeyNum0: Key = 48;
-pub const KeyNum1: Key = 49;
-pub const KeyNum2: Key = 50;
-pub const KeyNum3: Key = 51;
-pub const KeyNum4: Key = 52;
-pub const KeyNum5: Key = 53;
-pub const KeyNum6: Key = 54;
-pub const KeyNum7: Key = 55;
-pub const KeyNum8: Key = 56;
-pub const KeyNum9: Key = 57;
-pub const KeySemicolon: Key = 59;
-pub const KeyEqual: Key = 61;
-pub const KeyA: Key = 65;
-pub const KeyB: Key = 66;
-pub const KeyC: Key = 67;
-pub const KeyD: Key = 68;
-pub const KeyE: Key = 69;
-pub const KeyF: Key = 70;
-pub const KeyG: Key = 71;
-pub const KeyH: Key = 72;
-pub const KeyI: Key = 73;
-pub const KeyJ: Key = 74;
-pub const KeyK: Key = 75;
-pub const KeyL: Key = 76;
-pub const KeyM: Key = 77;
-pub const KeyN: Key = 78;
-pub const KeyO: Key = 79;
-pub const KeyP: Key = 80;
-pub const KeyQ: Key = 81;
-pub const KeyR: Key = 82;
-pub const KeyS: Key = 83;
-pub const KeyT: Key = 84;
-pub const KeyU: Key = 85;
-pub const KeyV: Key = 86;
-pub const KeyW: Key = 87;
-pub const KeyX: Key = 88;
-pub const KeyY: Key = 89;
-pub const KeyZ: Key = 90;
-pub const KeyLeftBracket: Key = 91;
-pub const KeyBackslash: Key = 92;
-pub const KeyRightBracket: Key = 93;
-pub const KeyGraveAccent: Key = 96;
-pub const KeyWorld1: Key = 161;
-pub const KeyWorld2: Key = 162;
-pub const KeyEscape: Key = 256;
-pub const KeyEnter: Key = 257;
-pub const KeyTab: Key = 258;
-pub const KeyBackspace: Key = 259;
-pub const KeyInsert: Key = 260;
-pub const KeyDelete: Key = 261;
-pub const KeyRight: Key = 262;
-pub const KeyLeft: Key = 263;
-pub const KeyDown: Key = 264;
-pub const KeyUp: Key = 265;
-pub const KeyPageUp: Key = 266;
-pub const KeyPageDown: Key = 267;
-pub const KeyHome: Key = 268;
-pub const KeyEnd: Key = 269;
-pub const KeyCapsLock: Key = 280;
-pub const KeyScrollLock: Key = 281;
-pub const KeyNumLock: Key = 282;
-pub const KeyPrintScreen: Key = 283;
-pub const KeyPause: Key = 284;
-pub const KeyF1: Key = 290;
-pub const KeyF2: Key = 291;
-pub const KeyF3: Key = 292;
-pub const KeyF4: Key = 293;
-pub const KeyF5: Key = 294;
-pub const KeyF6: Key = 295;
-pub const KeyF7: Key = 296;
-pub const KeyF8: Key = 297;
-pub const KeyF9: Key = 298;
-pub const KeyF10: Key = 299;
-pub const KeyF11: Key = 300;
-pub const KeyF12: Key = 301;
-pub const KeyF13: Key = 302;
-pub const KeyF14: Key = 303;
-pub const KeyF15: Key = 304;
-pub const KeyF16: Key = 305;
-pub const KeyF17: Key = 306;
-pub const KeyF18: Key = 307;
-pub const KeyF19: Key = 308;
-pub const KeyF20: Key = 309;
-pub const KeyF21: Key = 310;
-pub const KeyF22: Key = 311;
-pub const KeyF23: Key = 312;
-pub const KeyF24: Key = 313;
-pub const KeyF25: Key = 314;
-pub const KeyKp0: Key = 320;
-pub const KeyKp1: Key = 321;
-pub const KeyKp2: Key = 322;
-pub const KeyKp3: Key = 323;
-pub const KeyKp4: Key = 324;
-pub const KeyKp5: Key = 325;
-pub const KeyKp6: Key = 326;
-pub const KeyKp7: Key = 327;
-pub const KeyKp8: Key = 328;
-pub const KeyKp9: Key = 329;
-pub const KeyKpDecimal: Key = 330;
-pub const KeyKpDivide: Key = 331;
-pub const KeyKpMultiply: Key = 332;
-pub const KeyKpSubtract: Key = 333;
-pub const KeyKpAdd: Key = 334;
-pub const KeyKpEnter: Key = 335;
-pub const KeyKpEqual: Key = 336;
-pub const KeyLeftShift: Key = 340;
-pub const KeyLeftControl: Key = 341;
-pub const KeyLeftAlt: Key = 342;
-pub const KeyLeftSuper: Key = 343;
-pub const KeyRightShift: Key = 344;
-pub const KeyRightControl: Key = 345;
-pub const KeyRightAlt: Key = 346;
-pub const KeyRightSuper: Key = 347;
-pub const KeyMenu: Key = 348;
-pub const KeyLast: Key = 348;
+pub const ModifierType = c_int;
+pub const Modifier = enum(ModifierType) {
+    ModifierShift = 0x0001,
+    ModifierControl = 0x0002,
+    ModifierAlt = 0x0004,
+    ModifierSuper = 0x0008,
+    ModifierCapsLock = 0x0010,
+    ModifierNumLock = 0x0020,
+};
 
-pub const Modifiers = c_int;
-pub const ModifierShift: Modifiers = 0x0001;
-pub const ModifierControl: Modifiers = 0x0002;
-pub const ModifierAlt: Modifiers = 0x0004;
-pub const ModifierSuper: Modifiers = 0x0008;
-pub const ModifierCapsLock: Modifiers = 0x0010;
-pub const ModifierNumLock: Modifiers = 0x0020;
+pub const MouseType = c_int;
+pub const Mouse = enum(MouseType) {
+    MouseButton1 = 0,
+    MouseButton2 = 1,
+    MouseButton3 = 2,
+    MouseButton4 = 3,
+    MouseButton5 = 4,
+    MouseButton6 = 5,
+    MouseButton7 = 6,
+    MouseButton8 = 7,
+    MouseButtonLast = 7,
+    MouseButtonLeft = 0,
+    MouseButtonRight = 1,
+    MouseButtonMiddle = 2,
+};
 
-pub const Mouse = c_int;
-pub const MouseButton1: Mouse = 0;
-pub const MouseButton2: Mouse = 1;
-pub const MouseButton3: Mouse = 2;
-pub const MouseButton4: Mouse = 3;
-pub const MouseButton5: Mouse = 4;
-pub const MouseButton6: Mouse = 5;
-pub const MouseButton7: Mouse = 6;
-pub const MouseButton8: Mouse = 7;
-pub const MouseButtonLast: Mouse = 7;
-pub const MouseButtonLeft: Mouse = 0;
-pub const MouseButtonRight: Mouse = 1;
-pub const MouseButtonMiddle: Mouse = 2;
+pub const JoystickType = c_int;
+pub const Joystick = enum(JoystickType) {
+    JoystickButton1 = 0,
+    JoystickButton2 = 1,
+    JoystickButton3 = 2,
+    JoystickButton4 = 3,
+    JoystickButton5 = 4,
+    JoystickButton6 = 5,
+    JoystickButton7 = 6,
+    JoystickButton8 = 7,
+    JoystickButton9 = 8,
+    JoystickButton10 = 9,
+    JoystickButton11 = 10,
+    JoystickButton12 = 11,
+    JoystickButton13 = 12,
+    JoystickButton14 = 13,
+    JoystickButton15 = 14,
+    JoystickButton16 = 15,
+    JoystickButtonLast = 15,
+};
 
-pub const Joystick = c_int;
-pub const JoystickButton1: Joystick = 0;
-pub const JoystickButton2: Joystick = 1;
-pub const JoystickButton3: Joystick = 2;
-pub const JoystickButton4: Joystick = 3;
-pub const JoystickButton5: Joystick = 4;
-pub const JoystickButton6: Joystick = 5;
-pub const JoystickButton7: Joystick = 6;
-pub const JoystickButton8: Joystick = 7;
-pub const JoystickButton9: Joystick = 8;
-pub const JoystickButton10: Joystick = 9;
-pub const JoystickButton11: Joystick = 10;
-pub const JoystickButton12: Joystick = 11;
-pub const JoystickButton13: Joystick = 12;
-pub const JoystickButton14: Joystick = 13;
-pub const JoystickButton15: Joystick = 14;
-pub const JoystickButton16: Joystick = 15;
-pub const JoystickButtonLast: Joystick = 15;
+pub const GamepadButtonType = c_int;
+pub const GamepadButton = enum(GamepadButtonType) {
+    GamepadButtonA = 0,
+    GamepadButtonB = 1,
+    GamepadButtonX = 2,
+    GamepadButtonY = 3,
+    GamepadButtonLeftBumper = 4,
+    GamepadButtonRightBumper = 5,
+    GamepadButtonBack = 6,
+    GamepadButtonStart = 7,
+    GamepadButtonGuide = 8,
+    GamepadButtonLeftThumb = 9,
+    GamepadButtonCross = 0,
+    GamepadButtonCircle = 1,
+    GamepadButtonSquare = 2,
+    GamepadButtonTriangle = 3,
+    GamepadButtonRightThumb = 10,
+    GamepadButtonDpadUp = 11,
+    GamepadButtonDpadRight = 12,
+    GamepadButtonDpadDown = 13,
+    GamepadButtonDpadLeft = 14,
+    GamepadButtonLast = 14,
+};
 
-pub const GamepadButton = c_int;
-pub const GamepadButtonA: GamepadButton = 0;
-pub const GamepadButtonB: GamepadButton = 1;
-pub const GamepadButtonX: GamepadButton = 2;
-pub const GamepadButtonY: GamepadButton = 3;
-pub const GamepadButtonLeftBumper: GamepadButton = 4;
-pub const GamepadButtonRightBumper: GamepadButton = 5;
-pub const GamepadButtonBack: GamepadButton = 6;
-pub const GamepadButtonStart: GamepadButton = 7;
-pub const GamepadButtonGuide: GamepadButton = 8;
-pub const GamepadButtonLeftThumb: GamepadButton = 9;
-pub const GamepadButtonCross: GamepadButton = 0;
-pub const GamepadButtonCircle: GamepadButton = 1;
-pub const GamepadButtonSquare: GamepadButton = 2;
-pub const GamepadButtonTriangle: GamepadButton = 3;
-pub const GamepadButtonRightThumb: GamepadButton = 10;
-pub const GamepadButtonDpadUp: GamepadButton = 11;
-pub const GamepadButtonDpadRight: GamepadButton = 12;
-pub const GamepadButtonDpadDown: GamepadButton = 13;
-pub const GamepadButtonDpadLeft: GamepadButton = 14;
-pub const GamepadButtonLast: GamepadButton = 14;
+pub const GamepadAxisType = c_int;
+pub const GamepadAxis = enum(GamepadAxisType) {
+    GamepadAxisLeftX = 0,
+    GamepadAxisLeftY = 1,
+    GamepadAxisRightX = 2,
+    GamepadAxisRightY = 3,
+    GamepadAxisLeftTrigger = 4,
+    GamepadAxisRightTrigger = 5,
+    GamepadAxisLast = 5,
+};
 
-pub const GamepadAxis = c_int;
-pub const GamepadAxisLeftX: GamepadAxis = 0;
-pub const GamepadAxisLeftY: GamepadAxis = 1;
-pub const GamepadAxisRightX: GamepadAxis = 2;
-pub const GamepadAxisRightY: GamepadAxis = 3;
-pub const GamepadAxisLeftTrigger: GamepadAxis = 4;
-pub const GamepadAxisRightTrigger: GamepadAxis = 5;
-pub const GamepadAxisLast: GamepadAxis = 5;
+pub const GLFWError = error{
+    NotInitialized,
+    NoCurrentContext,
+    InvalidEnum,
+    InvalidValue,
+    OutOfMemory,
+    APIUnavailable,
+    VersionUnavailable,
+    PlatformError,
+    FormatUnavailable,
+    NoWindowContext,
+    NoError,
+};
 
-pub const GLFWError = error{ NotInitialized, NoCurrentContext, InvalidEnum, InvalidValue, OutOfMemory, APIUnavailable, VersionUnavailable, PlatformError, FormatUnavailable, NoWindowContext, NoError };
+pub const ErrorCodeType = c_int;
+pub const ErrorCode = enum(ErrorCodeType) {
+    NotInitialized = 0x00010001,
+    NoCurrentContext = 0x00010002,
+    InvalidEnum = 0x00010003,
+    InvalidValue = 0x00010004,
+    OutOfMemory = 0x00010005,
+    APIUnavailable = 0x00010006,
+    VersionUnavailable = 0x00010007,
+    PlatformError = 0x00010008,
+    FormatUnavailable = 0x00010009,
+    NoWindowContext = 0x0001000A,
+    NoError = 0,
+};
 
-pub const ErrorCode = c_int;
-pub const NotInitialized: ErrorCode = 0x00010001;
-pub const NoCurrentContext: ErrorCode = 0x00010002;
-pub const InvalidEnum: ErrorCode = 0x00010003;
-pub const InvalidValue: ErrorCode = 0x00010004;
-pub const OutOfMemory: ErrorCode = 0x00010005;
-pub const APIUnavailable: ErrorCode = 0x00010006;
-pub const VersionUnavailable: ErrorCode = 0x00010007;
-pub const PlatformError: ErrorCode = 0x00010008;
-pub const FormatUnavailable: ErrorCode = 0x00010009;
-pub const NoWindowContext: ErrorCode = 0x0001000A;
-pub const NoError: ErrorCode = 0;
+pub const WindowHintType = c_int;
+pub const WindowHint = enum(WindowHintType) {
+    Focused = 0x00020001,
+    Iconified = 0x00020002,
+    Resizable = 0x00020003,
+    Visible = 0x00020004,
+    Decorated = 0x00020005,
+    AutoIconify = 0x00020006,
+    Floating = 0x00020007,
+    Maximized = 0x00020008,
+    CenterCursor = 0x00020009,
+    TransparentFramebuffer = 0x0002000a,
+    Hovered = 0x0002000b,
+    FocusOnShow = 0x0002000c,
+    RedBits = 0x00021001,
+    GreenBits = 0x00021002,
+    BlueBits = 0x00021003,
+    AlphaBits = 0x00021004,
+    DepthBits = 0x00021005,
+    StencilBits = 0x00021006,
+    AccumRedBits = 0x00021007,
+    AccumGreenBits = 0x00021008,
+    AccumBlueBits = 0x00021009,
+    AccumAlphaBits = 0x0002100a,
+    AUXBuffers = 0x0002100b,
+    Stereo = 0x0002100c,
+    Samples = 0x0002100d,
+    SRGBCapable = 0x0002100e,
+    RefreshRate = 0x0002100f,
+    Doublebuffer = 0x00021010,
+    ClientAPI = 0x00022001,
+    ContextVersionMajor = 0x00022002,
+    ContextVersionMinor = 0x00022003,
+    ContextRevision = 0x00022004,
+    ContextRobustness = 0x00022005,
+    OpenGLForwardCompat = 0x00022006,
+    OpenGLDebugContext = 0x00022007,
+    OpenGLProfile = 0x00022008,
+    ContextReleaseBehavior = 0x00022009,
+    ContextNoError = 0x0002200a,
+    ContextCreationAPI = 0x0002200b,
+    ScaleToMonitor = 0x0002200c,
+    CocoaRetinaFramebuffer = 0x00023001,
+    CocoaFrameName = 0x00023002,
+    CocoaGraphicsSwitching = 0x00023003,
+    X11ClassName = 0x00024001,
+    X11InstanceName = 0x00024002,
+};
 
-pub const WindowHint = c_int;
-pub const Focused: WindowHint = 0x00020001;
-pub const Iconified: WindowHint = 0x00020002;
-pub const Resizable: WindowHint = 0x00020003;
-pub const Visible: WindowHint = 0x00020004;
-pub const Decorated: WindowHint = 0x00020005;
-pub const AutoIconify: WindowHint = 0x00020006;
-pub const Floating: WindowHint = 0x00020007;
-pub const Maximized: WindowHint = 0x00020008;
-pub const CenterCursor: WindowHint = 0x00020009;
-pub const TransparentFramebuffer: WindowHint = 0x0002000a;
-pub const Hovered: WindowHint = 0x0002000b;
-pub const FocusOnShow: WindowHint = 0x0002000c;
-pub const RedBits: WindowHint = 0x00021001;
-pub const GreenBits: WindowHint = 0x00021002;
-pub const BlueBits: WindowHint = 0x00021003;
-pub const AlphaBits: WindowHint = 0x00021004;
-pub const DepthBits: WindowHint = 0x00021005;
-pub const StencilBits: WindowHint = 0x00021006;
-pub const AccumRedBits: WindowHint = 0x00021007;
-pub const AccumGreenBits: WindowHint = 0x00021008;
-pub const AccumBlueBits: WindowHint = 0x00021009;
-pub const AccumAlphaBits: WindowHint = 0x0002100a;
-pub const AUXBuffers: WindowHint = 0x0002100b;
-pub const Stereo: WindowHint = 0x0002100c;
-pub const Samples: WindowHint = 0x0002100d;
-pub const SRGBCapable: WindowHint = 0x0002100e;
-pub const RefreshRate: WindowHint = 0x0002100f;
-pub const Doublebuffer: WindowHint = 0x00021010;
-pub const ClientAPI: WindowHint = 0x00022001;
-pub const ContextVersionMajor: WindowHint = 0x00022002;
-pub const ContextVersionMinor: WindowHint = 0x00022003;
-pub const ContextRevision: WindowHint = 0x00022004;
-pub const ContextRobustness: WindowHint = 0x00022005;
-pub const OpenGLForwardCompat: WindowHint = 0x00022006;
-pub const OpenGLDebugContext: WindowHint = 0x00022007;
-pub const OpenGLProfile: WindowHint = 0x00022008;
-pub const ContextReleaseBehavior: WindowHint = 0x00022009;
-pub const ContextNoError: WindowHint = 0x0002200a;
-pub const ContextCreationAPI: WindowHint = 0x0002200b;
-pub const ScaleToMonitor: WindowHint = 0x0002200c;
-pub const CocoaRetinaFramebuffer: WindowHint = 0x00023001;
-pub const CocoaFrameName: WindowHint = 0x00023002;
-pub const CocoaGraphicsSwitching: WindowHint = 0x00023003;
-pub const X11ClassName: WindowHint = 0x00024001;
-pub const X11InstanceName: WindowHint = 0x00024002;
+pub const APIAttributeType = c_int;
+pub const APIAttribute = enum(APIAttributeType) {
+    NoAPI = 0,
+    OpenGLAPI = 0x00030001,
+    OpenGLESAPI = 0x00030002,
+};
 
-pub const APIAttribute = c_int;
-pub const NoAPI: APIAttribute = 0;
-pub const OpenGLAPI: APIAttribute = 0x00030001;
-pub const OpenGLESAPI: APIAttribute = 0x00030002;
+pub const RobustnessAttributeType = c_int;
+pub const RobustnessAttribute = enum(RobustnessAttributeType) {
+    NoRobustness = 0,
+    NoResetNotification = 0x00031001,
+    LoseContextOnReset = 0x00031002,
+};
 
-pub const RobustnessAttribute = c_int;
-pub const NoRobustness: RobustnessAttribute = 0;
-pub const NoResetNotification: RobustnessAttribute = 0x00031001;
-pub const LoseContextOnReset: RobustnessAttribute = 0x00031002;
+pub const GLProfileAttributeType = c_int;
+pub const GLProfileAttribute = enum(GLProfileAttributeType) {
+    OpenGLAnyProfile = 0,
+    OpenGLCoreProfile = 0x00032001,
+    OpenGLCompatProfile = 0x00032002,
+};
 
-pub const GLProfileAttribute = c_int;
-pub const OpenGLAnyProfile: GLProfileAttribute = 0;
-pub const OpenGLCoreProfile: GLProfileAttribute = 0x00032001;
-pub const OpenGLCompatProfile: GLProfileAttribute = 0x00032002;
+pub const InputModeType = c_int;
+pub const InputMode = enum(InputModeType) {
+    Cursor = 0x00033001,
+    StickyKeys = 0x00033002,
+    StickyMouseButtons = 0x00033003,
+    LockKeyMods = 0x00033004,
+    RawMouseMotion = 0x00033005,
+};
 
-pub const InputMode = c_int;
-pub const Cursor: InputMode = 0x00033001;
-pub const StickyKeys: InputMode = 0x00033002;
-pub const StickyMouseButtons: InputMode = 0x00033003;
-pub const LockKeyMods: InputMode = 0x00033004;
-pub const RawMouseMotion: InputMode = 0x00033005;
+pub const CursorVisibilityAttributeType = c_int;
+pub const CursorVisibilityAttribute = enum(CursorVisibilityAttributeType) {
+    CursorNormal = 0x00034001,
+    CursorHidden = 0x00034002,
+    CursorDisabled = 0x00034003,
+};
 
-pub const CursorVisibilityAttribute = c_int;
-pub const CursorNormal: CursorVisibilityAttribute = 0x00034001;
-pub const CursorHidden: CursorVisibilityAttribute = 0x00034002;
-pub const CursorDisabled: CursorVisibilityAttribute = 0x00034003;
+pub const ReleaseBehaviorAttributeType = c_int;
+pub const ReleaseBehaviorAttribute = enum(ReleaseBehaviorAttributeType) {
+    AnyReleaseBehavior = 0,
+    ReleaseBehaviorFlush = 0x00035001,
+    ReleaseBehaviorNone = 0x00035002,
+};
 
-pub const ReleaseBehaviorAttribute = c_int;
-pub const AnyReleaseBehavior: ReleaseBehaviorAttribute = 0;
-pub const ReleaseBehaviorFlush: ReleaseBehaviorAttribute = 0x00035001;
-pub const ReleaseBehaviorNone: ReleaseBehaviorAttribute = 0x00035002;
-
-pub const ContextAPIAttribute = c_int;
-pub const NativeContextAPI: ContextAPIAttribute = 0x00036001;
-pub const EGLContextAPI: ContextAPIAttribute = 0x00036002;
-pub const OSMesaContextAPI: ContextAPIAttribute = 0x00036003;
+pub const ContextAPIAttributeType = c_int;
+pub const ContextAPIAttribute = enum(ContextAPIAttributeType) {
+    NativeContextAPI = 0x00036001,
+    EGLContextAPI = 0x00036002,
+    OSMesaContextAPI = 0x00036003,
+};
 
 pub const VkInstance = usize;
 pub const VkPhysicalDevice = usize;
@@ -451,24 +497,28 @@ pub const VkAllocationCallbacks = extern struct {
     pfn_internal_free: ?*const fn (p_user_data: ?*anyopaque, size: usize, allocation_type: VkInternalAllocationType, allocation_scope: VkSystemAllocationScope) callconv(vulkan_call_conv) void = null,
 };
 
-pub const DontCare: c_int = -1;
+pub const CursorShapeType = c_int;
+pub const CursorShape = enum(CursorShapeType) {
+    Arrow = 0x00036001,
+    IBeam = 0x00036002,
+    Crosshair = 0x00036003,
+    Hand = 0x00036004,
+    HResize = 0x00036005,
+    VResize = 0x00036006,
+};
 
-pub const CursorShape = c_int;
-pub const Arrow: CursorShape = 0x00036001;
-pub const IBeam: CursorShape = 0x00036002;
-pub const Crosshair: CursorShape = 0x00036003;
-pub const Hand: CursorShape = 0x00036004;
-pub const HResize: CursorShape = 0x00036005;
-pub const VResize: CursorShape = 0x00036006;
+pub const ConnectionType = c_int;
+pub const Connection = enum(ConnectionType) {
+    Connected = 0x00040001,
+    Disconnected = 0x00040002,
+};
 
-pub const Connection = c_int;
-pub const Connected: Connection = 0x00040001;
-pub const Disconnected: Connection = 0x00040002;
-
-pub const InitHint = c_int;
-pub const JoystickHatButtons: InitHint = 0x00050001;
-pub const CocoaChdirResources: InitHint = 0x00051001;
-pub const CocoaMenubar: InitHint = 0x00051002;
+pub const InitHintType = c_int;
+pub const InitHint = enum(InitHintType) {
+    JoystickHatButtons = 0x00050001,
+    CocoaChdirResources = 0x00051001,
+    CocoaMenubar = 0x00051002,
+};
 
 pub const GLproc = *const fn () callconv(.C) void;
 pub const VKproc = *const fn () callconv(.C) void;
@@ -539,17 +589,17 @@ extern fn glfwGetError(description: ?[*:0]const u8) c_int;
 fn errorCheck() !void {
     const code: c_int = glfwGetError(null);
     const err = switch (code) {
-        NotInitialized => GLFWError.NotInitialized,
-        NoCurrentContext => GLFWError.NoCurrentContext,
-        InvalidEnum => GLFWError.InvalidEnum,
-        InvalidValue => GLFWError.InvalidValue,
-        OutOfMemory => GLFWError.OutOfMemory,
-        APIUnavailable => GLFWError.APIUnavailable,
-        VersionUnavailable => GLFWError.VersionUnavailable,
-        PlatformError => GLFWError.PlatformError,
-        FormatUnavailable => GLFWError.FormatUnavailable,
-        NoWindowContext => GLFWError.NoWindowContext,
-        NoError => GLFWError.NoError,
+        ErrorCode.NotInitialized => GLFWError.NotInitialized,
+        ErrorCode.NoCurrentContext => GLFWError.NoCurrentContext,
+        ErrorCode.InvalidEnum => GLFWError.InvalidEnum,
+        ErrorCode.InvalidValue => GLFWError.InvalidValue,
+        ErrorCode.OutOfMemory => GLFWError.OutOfMemory,
+        ErrorCode.APIUnavailable => GLFWError.APIUnavailable,
+        ErrorCode.VersionUnavailable => GLFWError.VersionUnavailable,
+        ErrorCode.PlatformError => GLFWError.PlatformError,
+        ErrorCode.FormatUnavailable => GLFWError.FormatUnavailable,
+        ErrorCode.NoWindowContext => GLFWError.NoWindowContext,
+        ErrorCode.NoError => GLFWError.NoError,
         else => GLFWError.NoError,
     };
     return err;
@@ -1005,14 +1055,14 @@ pub fn getKeyScancode(key: Key) c_int {
 }
 
 extern fn glfwGetKey(window: ?*Window, key: c_int) c_int;
-pub fn getKey(window: ?*Window, key: Key) KeyState {
+pub fn getKey(window: ?*Window, key: Key) Key.KeyState {
     const res = glfwGetKey(window, (key));
     errorCheck2();
     return res;
 }
 
 extern fn glfwGetMouseButton(window: ?*Window, button: c_int) c_int;
-pub fn getMouseButton(window: ?*Window, button: Mouse) KeyState {
+pub fn getMouseButton(window: ?*Window, button: Mouse) Key.KeyState {
     const res = glfwGetMouseButton(window, (button));
     errorCheck2();
     return res;
