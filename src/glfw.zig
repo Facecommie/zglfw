@@ -200,84 +200,84 @@ pub const Key = enum(KeyType) {
 
 pub const ModifierType = c_int;
 pub const Modifier = enum(ModifierType) {
-    ModifierShift = 0x0001,
-    ModifierControl = 0x0002,
-    ModifierAlt = 0x0004,
-    ModifierSuper = 0x0008,
-    ModifierCapsLock = 0x0010,
-    ModifierNumLock = 0x0020,
+    Shift = 0x0001,
+    Control = 0x0002,
+    Alt = 0x0004,
+    Super = 0x0008,
+    CapsLock = 0x0010,
+    NumLock = 0x0020,
 };
 
 pub const MouseType = c_int;
 pub const Mouse = enum(MouseType) {
-    MouseButton1 = 0,
-    MouseButton2 = 1,
-    MouseButton3 = 2,
-    MouseButton4 = 3,
-    MouseButton5 = 4,
-    MouseButton6 = 5,
-    MouseButton7 = 6,
-    MouseButton8 = 7,
-    MouseButtonLast = 7,
-    MouseButtonLeft = 0,
-    MouseButtonRight = 1,
-    MouseButtonMiddle = 2,
+    Button1 = 0,
+    Button2 = 1,
+    Button3 = 2,
+    Button4 = 3,
+    Button5 = 4,
+    Button6 = 5,
+    Button7 = 6,
+    Button8 = 7,
+    ButtonLast = 7,
+    ButtonLeft = 0,
+    ButtonRight = 1,
+    ButtonMiddle = 2,
 };
 
 pub const JoystickType = c_int;
-pub const Joystick = enum(JoystickType) {
-    JoystickButton1 = 0,
-    JoystickButton2 = 1,
-    JoystickButton3 = 2,
-    JoystickButton4 = 3,
-    JoystickButton5 = 4,
-    JoystickButton6 = 5,
-    JoystickButton7 = 6,
-    JoystickButton8 = 7,
-    JoystickButton9 = 8,
-    JoystickButton10 = 9,
-    JoystickButton11 = 10,
-    JoystickButton12 = 11,
-    JoystickButton13 = 12,
-    JoystickButton14 = 13,
-    JoystickButton15 = 14,
-    JoystickButton16 = 15,
-    JoystickButtonLast = 15,
+pub const JoystickButton = enum(JoystickType) {
+    One = 0,
+    Two = 1,
+    Three = 2,
+    Four = 3,
+    Five = 4,
+    Six = 5,
+    Seven = 6,
+    Eight = 7,
+    Nine = 8,
+    Ten = 9,
+    Eleven = 10,
+    Twelve = 11,
+    Thirteen = 12,
+    Fourteen = 13,
+    Fifthteen = 14,
+    Sixteen = 15,
+    Last = 15,
 };
 
 pub const GamepadButtonType = c_int;
 pub const GamepadButton = enum(GamepadButtonType) {
-    GamepadButtonA = 0,
-    GamepadButtonB = 1,
-    GamepadButtonX = 2,
-    GamepadButtonY = 3,
-    GamepadButtonLeftBumper = 4,
-    GamepadButtonRightBumper = 5,
-    GamepadButtonBack = 6,
-    GamepadButtonStart = 7,
-    GamepadButtonGuide = 8,
-    GamepadButtonLeftThumb = 9,
-    GamepadButtonCross = 0,
-    GamepadButtonCircle = 1,
-    GamepadButtonSquare = 2,
-    GamepadButtonTriangle = 3,
-    GamepadButtonRightThumb = 10,
-    GamepadButtonDpadUp = 11,
-    GamepadButtonDpadRight = 12,
-    GamepadButtonDpadDown = 13,
-    GamepadButtonDpadLeft = 14,
-    GamepadButtonLast = 14,
+    A = 0,
+    B = 1,
+    X = 2,
+    Y = 3,
+    LeftBumper = 4,
+    RightBumper = 5,
+    Back = 6,
+    Start = 7,
+    Guide = 8,
+    LeftThumb = 9,
+    Cross = 0,
+    Circle = 1,
+    Square = 2,
+    Triangle = 3,
+    RightThumb = 10,
+    DpadUp = 11,
+    DpadRight = 12,
+    DpadDown = 13,
+    DpadLeft = 14,
+    Last = 14,
 };
 
 pub const GamepadAxisType = c_int;
 pub const GamepadAxis = enum(GamepadAxisType) {
-    GamepadAxisLeftX = 0,
-    GamepadAxisLeftY = 1,
-    GamepadAxisRightX = 2,
-    GamepadAxisRightY = 3,
-    GamepadAxisLeftTrigger = 4,
-    GamepadAxisRightTrigger = 5,
-    GamepadAxisLast = 5,
+    LeftX = 0,
+    LeftY = 1,
+    RightX = 2,
+    RightY = 3,
+    LeftTrigger = 4,
+    RightTrigger = 5,
+    Last = 5,
 };
 
 pub const GLFWError = error{
@@ -374,9 +374,9 @@ pub const RobustnessAttribute = enum(RobustnessAttributeType) {
 
 pub const GLProfileAttributeType = c_int;
 pub const GLProfileAttribute = enum(GLProfileAttributeType) {
-    OpenGLAnyProfile = 0,
-    OpenGLCoreProfile = 0x00032001,
-    OpenGLCompatProfile = 0x00032002,
+    AnyProfile = 0,
+    CoreProfile = 0x00032001,
+    CompatProfile = 0x00032002,
 };
 
 pub const InputModeType = c_int;
@@ -390,9 +390,9 @@ pub const InputMode = enum(InputModeType) {
 
 pub const CursorVisibilityAttributeType = c_int;
 pub const CursorVisibilityAttribute = enum(CursorVisibilityAttributeType) {
-    CursorNormal = 0x00034001,
-    CursorHidden = 0x00034002,
-    CursorDisabled = 0x00034003,
+    Normal = 0x00034001,
+    Hidden = 0x00034002,
+    Disabled = 0x00034003,
 };
 
 pub const ReleaseBehaviorAttributeType = c_int;
