@@ -10,11 +10,9 @@ const glfw_mod = b.addModule("root", .{
     .root_source_file = b.path("vendor/zglfw/src/glfw.zig"),
     .target = target,
     .optimize = optimize,
-    .link_libc = true,
 });
 exe.addLibraryPath(b.path("vendor/zglfw/libs/glfw"));
 exe.linkSystemLibrary("glfw3");
-exe.linkLibC();
 exe.root_module.addImport("zglfw", glfw_mod);
 ```
 
