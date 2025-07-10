@@ -583,17 +583,17 @@ extern fn glfwGetError(description: ?[*:0]const u8) c_int;
 fn errorCheck() !void {
     const code: c_int = glfwGetError(null);
     const err = switch (code) {
-        ErrorCode.NotInitialized => GLFWError.NotInitialized,
-        ErrorCode.NoCurrentContext => GLFWError.NoCurrentContext,
-        ErrorCode.InvalidEnum => GLFWError.InvalidEnum,
-        ErrorCode.InvalidValue => GLFWError.InvalidValue,
-        ErrorCode.OutOfMemory => GLFWError.OutOfMemory,
-        ErrorCode.APIUnavailable => GLFWError.APIUnavailable,
-        ErrorCode.VersionUnavailable => GLFWError.VersionUnavailable,
-        ErrorCode.PlatformError => GLFWError.PlatformError,
-        ErrorCode.FormatUnavailable => GLFWError.FormatUnavailable,
-        ErrorCode.NoWindowContext => GLFWError.NoWindowContext,
-        ErrorCode.NoError => GLFWError.NoError,
+        NotInitialized => GLFWError.NotInitialized,
+        NoCurrentContext => GLFWError.NoCurrentContext,
+        InvalidEnum => GLFWError.InvalidEnum,
+        InvalidValue => GLFWError.InvalidValue,
+        OutOfMemory => GLFWError.OutOfMemory,
+        APIUnavailable => GLFWError.APIUnavailable,
+        VersionUnavailable => GLFWError.VersionUnavailable,
+        PlatformError => GLFWError.PlatformError,
+        FormatUnavailable => GLFWError.FormatUnavailable,
+        NoWindowContext => GLFWError.NoWindowContext,
+        NoError => GLFWError.NoError,
         else => GLFWError.NoError,
     };
     return err;
