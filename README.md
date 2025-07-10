@@ -11,16 +11,16 @@ zGLFW is NOT 100% tested. I am happy to fix any errors that may arise, and I wil
 # Add this to your build.zig
 
 ```zig
-    const glfw_mod = b.addModule("root", .{
-        .root_source_file = b.path("vendor/zglfw/src/glfw.zig"),
-        .target = target,
-        .optimize = optimize,
-        .link_libc = true,
-    });
-    exe.addLibraryPath(b.path("vendor/zglfw/libs/glfw"));
-    exe.linkSystemLibrary("glfw3");
-    exe.linkLibC();
-    exe.root_module.addImport("zglfw", glfw_mod);
+const glfw_mod = b.addModule("root", .{
+    .root_source_file = b.path("vendor/zglfw/src/glfw.zig"),
+    .target = target,
+    .optimize = optimize,
+    .link_libc = true,
+});
+exe.addLibraryPath(b.path("vendor/zglfw/libs/glfw"));
+exe.linkSystemLibrary("glfw3");
+exe.linkLibC();
+exe.root_module.addImport("zglfw", glfw_mod);
 ```
 
 # Documentation
