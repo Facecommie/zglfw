@@ -195,7 +195,6 @@ pub const Key = enum(KeyType) {
     RightAlt = 346,
     RightSuper = 347,
     Menu = 348,
-    Last = 348,
 };
 
 pub const ModifierType = c_int;
