@@ -1048,14 +1048,14 @@ pub fn getKeyScancode(key: Key) c_int {
 }
 
 extern fn glfwGetKey(window: ?*Window, key: c_int) c_int;
-pub fn getKey(window: ?*Window, key: Key) Key.KeyState {
+pub fn getKey(window: ?*Window, key: Key) KeyType {
     const res = glfwGetKey(window, (key));
     errorCheck2();
     return res;
 }
 
 extern fn glfwGetMouseButton(window: ?*Window, button: c_int) c_int;
-pub fn getMouseButton(window: ?*Window, button: Mouse) Key.KeyState {
+pub fn getMouseButton(window: ?*Window, button: Mouse) KeyType {
     const res = glfwGetMouseButton(window, (button));
     errorCheck2();
     return res;
