@@ -1,3 +1,5 @@
+I just dont like the individual variables for the inputs, wrapped them in an enum.
+
 <h1 align="center">zGLFW</h1>
 <p align="center">A thin, idiomatic wrapper for GLFW. Written in Zig, for Zig!</p>
 
