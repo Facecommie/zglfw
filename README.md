@@ -1,4 +1,4 @@
-I just dont like the individual variables for the inputs, wrapped them in an enum. Also just making it a bit easier for me
+I just dont like the individual variables for the inputs, wrapped them in an enum. Also just making it a bit easier for me. If theres any bugs relating to what I did, feel free to report them.
 
 <h1 align="center">zGLFW</h1>
 <p align="center">A thin, idiomatic wrapper for GLFW. Written in Zig, for Zig! (With enums)</p>
