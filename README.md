@@ -11,7 +11,7 @@ const glfw_mod = b.addModule("root", .{
     .target = target,
     .optimize = optimize,
 });
-exe.addLibraryPath(b.path("vendor/zglfw/libs/glfw"));
+exe.addLibraryPath(b.path("vendor/zglfw/libs/glfw/windows")); // Windows only, you'll need to download MacOS/Linux version yourself
 exe.linkSystemLibrary("glfw3");
 exe.root_module.addImport("zglfw", glfw_mod);
 ```
