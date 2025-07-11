@@ -1023,8 +1023,8 @@ pub fn getInputMode(window: ?*Window, mode: InputMode) c_int {
 }
 
 extern fn glfwSetInputMode(window: ?*Window, mode: InputMode, value: c_int) void;
-pub fn setInputMode(window: ?*Window, mode: InputMode, value: c_int) void {
-    glfwSetInputMode(window, (mode), value);
+pub fn setInputMode(window: ?*Window, mode: InputMode, value: CursorVisibilityAttribute) void {
+    glfwSetInputMode(window, (mode), @intFromEnum(value));
     errorCheck2();
 }
 
