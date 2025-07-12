@@ -734,7 +734,7 @@ pub fn defaultWindowHints() void {
 
 extern fn glfwWindowHint(hint: c_int, value: c_int) void;
 pub fn windowHint(hint: WindowHint, value: c_int) void {
-    glfwWindowHint((hint), value);
+    glfwWindowHint(@intFromEnum(hint), value);
     errorCheck2();
 }
 
