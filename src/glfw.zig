@@ -601,7 +601,7 @@ fn errorCheck() GLFWError!void {
     return err;
 }
 
-fn errorCheck2() GLFWError!void {
+inline fn errorCheck2() GLFWError!void {
     errorCheck() catch |err| {
         if (err != GLFWError.NoError) {
             return err;
