@@ -582,7 +582,7 @@ pub fn init() !void {
 extern fn glfwTerminate() void;
 extern fn glfwGetError(description: ?[*:0]const u8) c_int;
 
-fn errorCheck() !void {
+fn errorCheck() GLFWError!void {
     const code: c_int = glfwGetError(null);
     const err = switch (code) {
         @intFromEnum(ErrorCode.NotInitialized) => GLFWError.NotInitialized,
@@ -601,23 +601,23 @@ fn errorCheck() !void {
     return err;
 }
 
-fn errorCheck2() void {
+fn errorCheck2() GLFWError!void {
     errorCheck() catch |err| {
         if (err != GLFWError.NoError) {
-            std.debug.print("error: {s}\n", .{@errorName(err)});
+            return err;
         }
     };
 }
 
-pub fn terminate() void {
+pub fn terminate() !void {
     glfwTerminate();
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwInitHint(hint: c_int, value: c_int) void;
-pub fn initHint(hint: InitHint, value: bool) void {
+pub fn initHint(hint: InitHint, value: bool) !void {
     glfwInitHint((hint), @intFromBool(value));
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetVersion(major: *c_int, minor: *c_int, rev: *c_int) void;
@@ -629,125 +629,125 @@ extern fn glfwSetErrorCallback(callback: ErrorFun) ErrorFun;
 pub const setErrorCallback = glfwSetErrorCallback;
 
 extern fn glfwGetMonitors(count: *c_int) ?[*]*Monitor;
-pub fn getMonitors(count: *c_int) ?[*]*Monitor {
+pub fn getMonitors(count: *c_int) !?[*]*Monitor {
     const res = glfwGetMonitors(count);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwGetPrimaryMonitor() *Monitor;
-pub fn getPrimaryMonitor() *Monitor {
+pub fn getPrimaryMonitor() !*Monitor {
     const res = glfwGetPrimaryMonitor();
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwGetMonitorPos(monitor: ?*Monitor, xpos: ?*c_int, ypos: ?*c_int) void;
-pub fn getMonitorPos(monitor: ?*Monitor, xpos: ?*c_int, ypos: ?*c_int) void {
+pub fn getMonitorPos(monitor: ?*Monitor, xpos: ?*c_int, ypos: ?*c_int) !void {
     glfwGetMonitorPos(monitor, xpos, ypos);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetMonitorWorkarea(monitor: ?*Monitor, xpos: ?*c_int, ypos: ?*c_int, width: ?*c_int, height: ?*c_int) void;
-pub fn getMonitorWorkarea(monitor: ?*Monitor, xpos: ?*c_int, ypos: ?*c_int, width: ?*c_int, height: ?*c_int) void {
+pub fn getMonitorWorkarea(monitor: ?*Monitor, xpos: ?*c_int, ypos: ?*c_int, width: ?*c_int, height: ?*c_int) !void {
     glfwGetMonitorWorkarea(monitor, xpos, ypos, width, height);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetMonitorPhysicalSize(monitor: ?*Monitor, widthMM: ?*c_int, heightMM: ?*c_int) void;
-pub fn getMonitorPhysicalSize(monitor: ?*Monitor, widthMM: ?*c_int, heightMM: ?*c_int) void {
+pub fn getMonitorPhysicalSize(monitor: ?*Monitor, widthMM: ?*c_int, heightMM: ?*c_int) !void {
     glfwGetMonitorPhysicalSize(monitor, widthMM, heightMM);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetMonitorContentScale(monitor: ?*Monitor, xscale: ?*f32, yscale: ?*f32) void;
-pub fn getMonitorContentScale(monitor: ?*Monitor, xscale: ?*f32, yscale: ?*f32) void {
+pub fn getMonitorContentScale(monitor: ?*Monitor, xscale: ?*f32, yscale: ?*f32) !void {
     glfwGetMonitorContentScale(monitor, xscale, yscale);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetMonitorName(monitor: ?*Monitor) ?[*:0]const u8;
-pub fn getMonitorName(monitor: ?*Monitor) ?[*:0]const u8 {
+pub fn getMonitorName(monitor: ?*Monitor) !?[*:0]const u8 {
     const res = glfwGetMonitorName(monitor);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwSetMonitorUserPointer(monitor: ?*Monitor, pointer: ?*anyopaque) void;
-pub fn setMonitorUserPointer(monitor: ?*Monitor, pointer: ?*anyopaque) void {
+pub fn setMonitorUserPointer(monitor: ?*Monitor, pointer: ?*anyopaque) !void {
     glfwSetMonitorUserPointer(monitor, pointer);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetMonitorUserPointer(monitor: ?*Monitor) ?*anyopaque;
-pub fn getMonitorUserPointer(monitor: ?*Monitor) ?*anyopaque {
+pub fn getMonitorUserPointer(monitor: ?*Monitor) !?*anyopaque {
     const res = glfwGetMonitorUserPointer(monitor);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwSetMonitorCallback(callback: MonitorFun) MonitorFun;
-pub fn setMonitorCallback(callback: MonitorFun) MonitorFun {
+pub fn setMonitorCallback(callback: MonitorFun) !MonitorFun {
     const res = glfwSetMonitorCallback(callback);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwGetVideoModes(monitor: ?*Monitor, count: *c_int) ?[*]Vidmode;
-pub fn getVideoModes(monitor: ?*Monitor, count: *c_int) ?[*]Vidmode {
+pub fn getVideoModes(monitor: ?*Monitor, count: *c_int) !?[*]Vidmode {
     const res = glfwGetVideoModes(monitor, count);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwGetVideoMode(monitor: ?*Monitor) ?*Vidmode;
-pub fn getVideoMode(monitor: ?*Monitor) ?*Vidmode {
+pub fn getVideoMode(monitor: ?*Monitor) !?*Vidmode {
     const res = getVideoMode(monitor);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwSetGamma(monitor: ?*Monitor, gamma: f32) void;
-pub fn setGamma(monitor: ?*Monitor, gamma: f32) void {
+pub fn setGamma(monitor: ?*Monitor, gamma: f32) !void {
     glfwSetGamma(monitor, gamma);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetGammaRamp(monitor: ?*Monitor) ?*Gammaramp;
-pub fn getGammaRamp(monitor: ?*Monitor) ?*Gammaramp {
+pub fn getGammaRamp(monitor: ?*Monitor) !?*Gammaramp {
     const res = glfwGetGammaRamp(monitor);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwSetGammaRamp(monitor: ?*Monitor, ramp: ?*Gammaramp) void;
-pub fn setGammaRamp(monitor: ?*Monitor, ramp: ?*Gammaramp) void {
+pub fn setGammaRamp(monitor: ?*Monitor, ramp: ?*Gammaramp) !void {
     glfwSetGammaRamp(monitor, ramp);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwDefaultWindowHints() void;
-pub fn defaultWindowHints() void {
+pub fn defaultWindowHints() !void {
     glfwDefaultWindowHints();
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwWindowHint(hint: c_int, value: c_int) void;
-pub fn windowHint(hint: WindowHint, value: c_int) void {
+pub fn windowHint(hint: WindowHint, value: c_int) !void {
     glfwWindowHint(@intFromEnum(hint), value);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwWindowHintString(hint: c_int, value: [*:0]const u8) void;
-pub fn windowHintString(hint: WindowHint, value: [*:0]const u8) void {
+pub fn windowHintString(hint: WindowHint, value: [*:0]const u8) !void {
     glfwWindowHintString((hint), value);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwCreateWindow(width: c_int, height: c_int, title: [*:0]const u8, monitor: ?*Monitor, share: ?*Window) ?*Window;
 pub fn createWindow(width: c_int, height: c_int, title: [*:0]const u8, monitor: ?*Monitor, share: ?*Window) !*Window {
     const res = glfwCreateWindow(width, height, title, monitor, share);
-    errorCheck2();
+    try errorCheck2();
     if (res == null) {
         return GLFWError.PlatformError;
     }
@@ -755,88 +755,88 @@ pub fn createWindow(width: c_int, height: c_int, title: [*:0]const u8, monitor: 
 }
 
 extern fn glfwDestroyWindow(window: ?*Window) void;
-pub fn destroyWindow(window: ?*Window) void {
+pub fn destroyWindow(window: ?*Window) !void {
     glfwDestroyWindow(window);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwWindowShouldClose(window: ?*Window) c_int;
-pub fn windowShouldClose(window: ?*Window) bool {
+pub fn windowShouldClose(window: ?*Window) !bool {
     const res = glfwWindowShouldClose(window);
-    errorCheck2();
+    try errorCheck2();
     return res != 0;
 }
 
 extern fn glfwSetWindowShouldClose(window: ?*Window, value: c_int) void;
-pub fn setWindowShouldClose(window: ?*Window, value: bool) void {
+pub fn setWindowShouldClose(window: ?*Window, value: bool) !void {
     glfwSetWindowShouldClose(window, @intFromBool(value));
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwSetWindowTitle(window: ?*Window, title: [*:0]const u8) void;
-pub fn setWindowTitle(window: ?*Window, title: [*:0]const u8) void {
+pub fn setWindowTitle(window: ?*Window, title: [*:0]const u8) !void {
     glfwSetWindowTitle(window, title);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwSetWindowIcon(window: ?*Window, count: c_int, images: ?[*]Image) void;
-pub fn setWindowIcon(window: ?*Window, count: c_int, images: ?[*]Image) void {
+pub fn setWindowIcon(window: ?*Window, count: c_int, images: ?[*]Image) !void {
     glfwSetWindowIcon(window, count, images);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetWindowPos(window: ?*Window, xpos: *c_int, ypos: *c_int) void;
-pub fn getWindowPos(window: ?*Window, xpos: *c_int, ypos: *c_int) void {
+pub fn getWindowPos(window: ?*Window, xpos: *c_int, ypos: *c_int) !void {
     glfwGetWindowPos(window, xpos, ypos);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwSetWindowPos(window: ?*Window, xpos: c_int, ypos: c_int) void;
-pub fn setWindowPos(window: ?*Window, xpos: c_int, ypos: c_int) void {
+pub fn setWindowPos(window: ?*Window, xpos: c_int, ypos: c_int) !void {
     glfwSetWindowPos(window, xpos, ypos);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetWindowSize(window: ?*Window, width: *c_int, height: *c_int) void;
-pub fn getWindowSize(window: ?*Window, width: *c_int, height: *c_int) void {
+pub fn getWindowSize(window: ?*Window, width: *c_int, height: *c_int) !void {
     glfwGetWindowSize(window, width, height);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwSetWindowSizeLimits(window: ?*Window, minwidth: c_int, minheight: c_int, maxwidth: c_int, maxheight: c_int) void;
 pub fn setWindowSizeLimits(window: ?*Window, minwidth: c_int, minheight: c_int, maxwidth: c_int, maxheight: c_int) void {
     glfwSetWindowSizeLimits(window, minwidth, minheight, maxwidth, maxheight);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwSetWindowAspectRatio(window: ?*Window, numer: c_int, denom: c_int) void;
-pub fn setWindowAspectRatio(window: ?*Window, numer: c_int, denom: c_int) void {
+pub fn setWindowAspectRatio(window: ?*Window, numer: c_int, denom: c_int) !void {
     glfwSetWindowAspectRatio(window, numer, denom);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwSetWindowSize(window: ?*Window, width: c_int, height: c_int) void;
-pub fn setWindowSize(window: ?*Window, width: c_int, height: c_int) void {
+pub fn setWindowSize(window: ?*Window, width: c_int, height: c_int) !void {
     glfwSetWindowSize(window, width, height);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetFramebufferSize(window: ?*Window, width: *c_int, height: *c_int) void;
-pub fn getFramebufferSize(window: ?*Window, width: *c_int, height: *c_int) void {
+pub fn getFramebufferSize(window: ?*Window, width: *c_int, height: *c_int) !void {
     glfwGetFramebufferSize(window, width, height);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetWindowFrameSize(window: ?*Window, left: *c_int, top: *c_int, right: *c_int, bottom: *c_int) void;
-pub fn getWindowFrameSize(window: ?*Window, left: *c_int, top: *c_int, right: *c_int, bottom: *c_int) void {
+pub fn getWindowFrameSize(window: ?*Window, left: *c_int, top: *c_int, right: *c_int, bottom: *c_int) !void {
     glfwGetWindowFrameSize(window, left, top, right, bottom);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetWindowContentScale(window: ?*Window, xscale: *f32, yscale: *f32) void;
-pub fn getWindowContentScale(window: ?*Window, xscale: *f32, yscale: *f32) void {
+pub fn getWindowContentScale(window: ?*Window, xscale: *f32, yscale: *f32) !void {
     glfwGetWindowContentScale(window, xscale, yscale);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetWindowOpacity(window: ?*Window) f32;
@@ -943,163 +943,163 @@ extern fn glfwSetWindowMaximizeCallback(window: ?*Window, callback: WindowMaximi
 extern fn glfwSetFramebufferSizeCallback(window: ?*Window, callback: FramebufferSizeFun) FramebufferSizeFun;
 extern fn glfwSetWindowContentScaleCallback(window: ?*Window, callback: WindowContentScaleFun) WindowContentScaleFun;
 
-pub fn setWindowPosCallback(window: ?*Window, callback: WindowPosFun) WindowPosFun {
+pub fn setWindowPosCallback(window: ?*Window, callback: WindowPosFun) !WindowPosFun {
     const res = glfwSetWindowPosCallback(window, callback);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
-pub fn setWindowSizeCallback(window: ?*Window, callback: WindowSizeFun) WindowSizeFun {
+pub fn setWindowSizeCallback(window: ?*Window, callback: WindowSizeFun) !WindowSizeFun {
     const res = glfwSetWindowSizeCallback(window, callback);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
-pub fn setWindowCloseCallback(window: ?*Window, callback: WindowCloseFun) WindowCloseFun {
+pub fn setWindowCloseCallback(window: ?*Window, callback: WindowCloseFun) !WindowCloseFun {
     const res = glfwSetWindowCloseCallback(window, callback);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
-pub fn setWindowRefreshCallback(window: ?*Window, callback: WindowRefreshFun) WindowRefreshFun {
+pub fn setWindowRefreshCallback(window: ?*Window, callback: WindowRefreshFun) !WindowRefreshFun {
     const res = glfwSetWindowRefreshCallback(window, callback);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
-pub fn setWindowFocusCallback(window: ?*Window, callback: WindowFocusFun) WindowFocusFun {
+pub fn setWindowFocusCallback(window: ?*Window, callback: WindowFocusFun) !WindowFocusFun {
     const res = glfwSetWindowFocusCallback(window, callback);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
-pub fn setWindowIconifyCallback(window: ?*Window, callback: WindowIconifyFun) WindowIconifyFun {
+pub fn setWindowIconifyCallback(window: ?*Window, callback: WindowIconifyFun) !WindowIconifyFun {
     const res = glfwSetWindowIconifyCallback(window, callback);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
-pub fn setWindowMaximizeCallback(window: ?*Window, callback: WindowMaximizeFun) WindowMaximizeFun {
+pub fn setWindowMaximizeCallback(window: ?*Window, callback: WindowMaximizeFun) !WindowMaximizeFun {
     const res = glfwSetWindowMaximizeCallback(window, callback);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
-pub fn setFramebufferSizeCallback(window: ?*Window, callback: FramebufferSizeFun) FramebufferSizeFun {
+pub fn setFramebufferSizeCallback(window: ?*Window, callback: FramebufferSizeFun) !FramebufferSizeFun {
     const res = glfwSetFramebufferSizeCallback(window, callback);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
-pub fn setWindowContentScaleCallback(window: ?*Window, callback: WindowContentScaleFun) WindowContentScaleFun {
+pub fn setWindowContentScaleCallback(window: ?*Window, callback: WindowContentScaleFun) !WindowContentScaleFun {
     const res = glfwSetWindowContentScaleCallback(window, callback);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwPollEvents() void;
-pub fn pollEvents() void {
+pub fn pollEvents() !void {
     glfwPollEvents();
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwWaitEvents() void;
-pub fn waitEvents() void {
+pub fn waitEvents() !void {
     glfwWaitEvents();
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwWaitEventsTimeout(timeout: f64) void;
-pub fn waitEventsTimeout(timeout: f64) void {
+pub fn waitEventsTimeout(timeout: f64) !void {
     glfwWaitEventsTimeout(timeout);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwPostEmptyEvent() void;
-pub fn postEmptyEvent() void {
+pub fn postEmptyEvent() !void {
     glfwPostEmptyEvent();
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetInputMode(window: ?*Window, mode: c_int) c_int;
 
 //Depending on what your input mode is, you can change to true/false or one of the attribute enums
-pub fn getInputMode(window: ?*Window, mode: InputMode) c_int {
+pub fn getInputMode(window: ?*Window, mode: InputMode) !c_int {
     const res = glfwGetInputMode(window, (mode));
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwSetInputMode(window: ?*Window, mode: InputMode, value: c_int) void;
-pub fn setInputMode(window: ?*Window, mode: InputMode, value: CursorVisibilityAttribute) void {
+pub fn setInputMode(window: ?*Window, mode: InputMode, value: CursorVisibilityAttribute) !void {
     glfwSetInputMode(window, (mode), @intFromEnum(value));
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwRawMouseMotionSupported() c_int;
-pub fn rawMouseMotionSupported() bool {
+pub fn rawMouseMotionSupported() !bool {
     const res = glfwRawMouseMotionSupported();
-    errorCheck2();
+    try errorCheck2();
     return res != 0;
 }
 
 const std = @import("std");
 extern fn glfwGetKeyName(key: c_int, scancode: c_int) ?[*:0]const u8;
-pub fn getKeyName(key: Key, scancode: c_int) ?[:0]const u8 {
+pub fn getKeyName(key: Key, scancode: c_int) !?[:0]const u8 {
     const res = glfwGetKeyName((key), scancode);
-    errorCheck2();
+    try errorCheck2();
     return std.mem.spanZ(res);
 }
 
 extern fn glfwGetKeyScancode(key: c_int) c_int;
-pub fn getKeyScancode(key: Key) c_int {
+pub fn getKeyScancode(key: Key) !c_int {
     const res = glfwGetKeyScancode((key));
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwGetKey(window: ?*Window, key: c_int) c_int;
-pub fn getKey(window: ?*Window, key: Key) Action {
+pub fn getKey(window: ?*Window, key: Key) !Action {
     const res = glfwGetKey(window, @intFromEnum(key));
-    errorCheck2();
+    try errorCheck2();
     return @enumFromInt(res);
 }
 
 extern fn glfwGetMouseButton(window: ?*Window, button: c_int) c_int;
-pub fn getMouseButton(window: ?*Window, button: Mouse) Action {
+pub fn getMouseButton(window: ?*Window, button: Mouse) !Action {
     const res = glfwGetMouseButton(window, @intFromEnum(button));
-    errorCheck2();
+    try errorCheck2();
     return @enumFromInt(res);
 }
 
 extern fn glfwGetCursorPos(window: ?*Window, xpos: *f64, ypos: *f64) void;
-pub fn getCursorPos(window: ?*Window, xpos: *f64, ypos: *f64) void {
+pub fn getCursorPos(window: ?*Window, xpos: *f64, ypos: *f64) !void {
     glfwGetCursorPos(window, xpos, ypos);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwSetCursorPos(window: ?*Window, xpos: f64, ypos: f64) void;
-pub fn setCursorPos(window: ?*Window, xpos: f64, ypos: f64) void {
+pub fn setCursorPos(window: ?*Window, xpos: f64, ypos: f64) !void {
     glfwSetCursorPos(window, xpos, ypos);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwCreateCursor(image: ?*Image, xhot: c_int, yhot: c_int) ?*CursorHandle;
-pub fn createCursor(image: ?*Image, xhot: c_int, yhot: c_int) ?*CursorHandle {
+pub fn createCursor(image: ?*Image, xhot: c_int, yhot: c_int) !?*CursorHandle {
     const res = glfwCreateCursor(image, xhot, yhot);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwCreateStandardCursor(shape: c_int) ?*CursorHandle;
-pub fn createStandardCursor(shape: CursorShape) ?*CursorHandle {
+pub fn createStandardCursor(shape: CursorShape) !?*CursorHandle {
     const res = glfwCreateStandardCursor((shape));
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwDestroyCursor(cursor: ?*CursorHandle) void;
-pub fn destroyCursor(cursor: ?*CursorHandle) void {
+pub fn destroyCursor(cursor: ?*CursorHandle) !void {
     glfwDestroyCursor(cursor);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwSetCursor(window: ?*Window, cursor: ?*CursorHandle) void;
-pub fn setCursor(window: ?*Window, cursor: ?*CursorHandle) void {
+pub fn setCursor(window: ?*Window, cursor: ?*CursorHandle) !void {
     glfwSetCursor(window, cursor);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwSetKeyCallback(window: ?*Window, callback: KeyFun) KeyFun;
@@ -1246,116 +1246,124 @@ pub fn getGamepadState(jid: c_int, state: ?*GamepadState) c_int {
 extern fn glfwSetClipboardString(window: ?*Window, string: [*:0]const u8) void;
 pub fn setClipboardString(window: ?*Window, string: [*:0]const u8) void {
     glfwSetClipboardString(window, string);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetClipboardString(window: ?*Window) ?[*:0]const u8;
 pub fn getClipboardString(window: ?*Window) ?[:0]const u8 {
     const res = glfwGetClipboardString(window);
-    errorCheck2();
+    try errorCheck2();
     return std.mem.spanZ(res);
 }
 
 extern fn glfwGetTime() f64;
-pub fn getTime() f64 {
+pub fn getTime() !f64 {
     const res = glfwGetTime();
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwSetTime(time: f64) void;
-pub fn setTime(time: f64) void {
+pub fn setTime(time: f64) !void {
     glfwSetTime(time);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetTimerValue() u64;
-pub fn getTimerValue() u64 {
+pub fn getTimerValue() !u64 {
     const res = glfwGetTimerValue();
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwGetTimerFrequency() u64;
-pub fn getTimerFrequency() u64 {
+pub fn getTimerFrequency() !u64 {
     const res = glfwGetTimerFrequency();
-    errorCheck2();
+    try errorCheck2();
     return res();
 }
 
 //Context
 extern fn glfwMakeContextCurrent(window: ?*Window) void;
-pub fn makeContextCurrent(window: ?*Window) void {
+pub fn makeContextCurrent(window: ?*Window) !void {
     glfwMakeContextCurrent(window);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwGetCurrentContext() ?*Window;
-pub fn getCurrentContext(window: ?*Window) ?*Window {
+pub fn getCurrentContext(window: ?*Window) !?*Window {
     const res = glfwGetCurrentContext(window);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwSwapBuffers(window: ?*Window) void;
-pub fn swapBuffers(window: ?*Window) void {
+pub fn swapBuffers(window: ?*Window) !void {
     glfwSwapBuffers(window);
-    errorCheck2();
+    try errorCheck2();
 }
 
 extern fn glfwSwapInterval(interval: c_int) void;
-pub fn swapInterval(interval: c_int) void {
+pub fn swapInterval(interval: c_int) !void {
     glfwSwapInterval(interval);
-    errorCheck2();
+    try errorCheck2();
 }
 
 //GL Stuff
 extern fn glfwExtensionSupported(extension: [*:0]const u8) c_int;
-pub fn extensionSupported(extension: [*:0]const u8) c_int {
+pub fn extensionSupported(extension: [*:0]const u8) !c_int {
     const res = glfwExtensionSupported(extension);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwGetProcAddress(procname: [*:0]const u8) ?GLproc;
-pub fn getProcAddress(procname: [*:0]const u8) ?GLproc {
+pub fn getProcAddress(procname: [*:0]const u8) !?GLproc {
     const res = glfwGetProcAddress(procname);
-    errorCheck2();
+    try errorCheck2();
+    return res;
+}
+
+pub fn getProcAddressIgnoreError(procname: [*:0]const u8) ?GLproc {
+    const res = glfwGetProcAddress(procname);
+    errorCheck2() catch |err| {
+        std.debug.panic("Error: {}", .{err});
+    };
     return res;
 }
 
 //Vulkan stuff
 extern fn glfwGetInstanceProcAddress(instance: VkInstance, procname: [*:0]const u8) ?VKproc;
-pub fn getInstanceProcAddress(instance: VkInstance, procname: [*:0]const u8) ?VKproc {
+pub fn getInstanceProcAddress(instance: VkInstance, procname: [*:0]const u8) !?VKproc {
     const res = glfwGetInstanceProcAddress(instance, procname);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwGetPhysicalDevicePresentationSupport(instance: VkInstance, device: VkPhysicalDevice, queuefamily: u32) c_int;
-pub fn getPhysicalDevicePresentationSupport(instance: VkInstance, device: VkPhysicalDevice, queuefamily: u32) bool {
+pub fn getPhysicalDevicePresentationSupport(instance: VkInstance, device: VkPhysicalDevice, queuefamily: u32) !bool {
     const res = glfwGetPhysicalDevicePresentationSupport(instance, device, queuefamily);
-    errorCheck2();
+    try errorCheck2();
     return res != 0;
 }
 
 extern fn glfwCreateWindowSurface(instance: VkInstance, window: *Window, allocator: ?*const VkAllocationCallbacks, surface: *VkSurfaceKHR) VkResult;
-pub fn createWindowSurface(instance: VkInstance, window: *Window, allocator: ?*const VkAllocationCallbacks, surface: *VkSurfaceKHR) VkResult {
+pub fn createWindowSurface(instance: VkInstance, window: *Window, allocator: ?*const VkAllocationCallbacks, surface: *VkSurfaceKHR) !VkResult {
     const res = glfwCreateWindowSurface(instance, window, allocator, surface);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
 
 extern fn glfwVulkanSupported() c_int;
-pub fn vulkanSupported() bool {
+pub fn vulkanSupported() !bool {
     const res = glfwVulkanSupported();
-    errorCheck2();
+    try errorCheck2();
     return res != 0;
 }
 
 extern fn glfwGetRequiredInstanceExtensions(count: *u32) ?[*][*:0]const u8;
-pub fn getRequiredInstanceExtensions(count: *u32) ?[*][*:0]const u8 {
+pub fn getRequiredInstanceExtensions(count: *u32) !?[*][*:0]const u8 {
     const res = glfwGetRequiredInstanceExtensions(count);
-    errorCheck2();
+    try errorCheck2();
     return res;
 }
