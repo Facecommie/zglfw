@@ -602,11 +602,13 @@ fn errorCheck() GLFWError!void {
 }
 
 inline fn errorCheck2() GLFWError!void {
-    errorCheck() catch |err| {
-        if (err != GLFWError.NoError) {
-            return err;
-        }
-    };
+    if (builtin.mode == .Debug) {
+        errorCheck() catch |err| {
+            if (err != GLFWError.NoError) {
+                return err;
+            }
+        };
+    }
 }
 
 pub fn terminate() !void {
